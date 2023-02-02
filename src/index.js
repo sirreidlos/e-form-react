@@ -6,7 +6,7 @@ import "./index.css";
 import Root from "./routes/Root";
 
 import ErrorPage from "./ErrorPage";
-import CreateForm from "./routes/forms/CreateForm";
+// import CreateForm from "./routes/forms/CreateForm";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
 
@@ -30,11 +30,11 @@ const router = createBrowserRouter([
     element: <Register />,
     errorElement: <ErrorPage />,
   },
-  {
-    path: "/create",
-    element: <CreateForm />,
-    errorElement: <ErrorPage />,
-  },
+  // {
+  //   path: "/create",
+  //   element: <CreateForm />,
+  //   errorElement: <ErrorPage />,
+  // },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

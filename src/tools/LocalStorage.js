@@ -1,4 +1,6 @@
-export const setToken = (token, ttl = 1000 * 60 * 60 * 24) => {
+const SEVEN_DAYS_IN_MILISECONDS = 168 * 60 * 60 * 1000;
+
+export const setToken = (token, ttl = SEVEN_DAYS_IN_MILISECONDS) => {
   const now = new Date();
 
   const item = {

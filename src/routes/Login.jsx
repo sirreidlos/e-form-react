@@ -1,11 +1,46 @@
+import { useState } from "react";
+import ApiClient from "../tools/ApiClient";
+import LocalStorage from "../tools/LocalStorage";
+import { Link, useNavigate } from "react-router-dom";
+
 export default function Login() {
+  let [error, setError] = useState("");
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
     const values = Object.fromEntries(data.entries());
 
-    console.log(values);
+    ApiClient.post("/login", values)
+      .then((res) => {
+        console.log(res.data);
+        if (res.status !== 200) {
+          return;
+        }
+
+        if (!res.data.token) {
+          showError("Error: No token.");
+          return;
+        }
+
+        LocalStorage.setToken(res.data.token);
+        navigate("/");
+      })
+      .catch((err) => {
+        if (err.response) {
+          showError(`Error: ${err.response.data.message}`);
+        } else {
+          showError("An unexpected error has occured.");
+          console.log(err);
+        }
+      });
+  };
+
+  const showError = (msg) => {
+    setError(msg);
+    setTimeout(setError, 5000, "");
   };
 
   return (
@@ -23,28 +58,32 @@ export default function Login() {
               name="username"
               className="w-96"
               placeholder="Username"
+              required
             />
             <input
               type="email"
               name="email"
               className="w-96"
               placeholder="Email"
+              required
             />
             <input
               type="password"
               name="password"
               className="w-96"
               placeholder="Password"
+              required
             />
           </div>
+          {error ? <p className="text-red-600">{error}</p> : ""}
           <p>
             If you don’t have an account.{" "}
-            <a
+            <Link
+              to="/register"
               className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 font-bold"
-              href={`/register`}
             >
               Register Here
-            </a>
+            </Link>
             .
           </p>
           <button
