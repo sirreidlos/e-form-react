@@ -10,6 +10,10 @@ import CreateForm from "./routes/forms/CreateForm";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
 
+// import dotenv from "dotenv";
+
+// dotenv.config();
+
 const router = createBrowserRouter([
   {
     path: "/",
