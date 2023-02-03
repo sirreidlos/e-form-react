@@ -53,13 +53,13 @@ export default function Login() {
           className="flex flex-col gap-y-6 [&>input]:border-b-2"
         >
           <div className="flex flex-col gap-y-4 [&>input]:border-b-2">
-            <input
+            {/* <input
               type="text"
               name="username"
               className="w-96"
               placeholder="Username"
               required
-            />
+            /> */}
             <input
               type="email"
               name="email"
