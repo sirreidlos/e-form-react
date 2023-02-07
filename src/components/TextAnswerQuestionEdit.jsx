@@ -4,25 +4,17 @@ import TextareaAutosize from "@mui/base/TextareaAutosize";
 export default function TextAnswerQuestionEdit({ number, text, handleChange }) {
   // const [question, setQuestion] = useState("Question");
 
-  const questionType = {
-    TextAnswer: "TextAnswer",
-    MultipleChoice: "MultipleChoice",
-    Checkboxes: "Checkboxes",
-    Dropdown: "Dropdown",
-    Date: "Date",
-    Time: "Time",
-  };
-
   return (
     <>
       <div className="space-y-2">
-        <input
+        <TextareaAutosize
           type="text"
-          className="text-2xl w-full bg-transparent border-b border-gray-300 py-2 outline-none "
+          className="text-2xl w-full bg-transparent border-b border-gray-300 py-2 outline-none resize-none"
           onChange={(e) => {
             handleChange(number, e.target.value);
           }}
-          defaultValue="Question"
+          value={text}
+          placeholder="Question"
         />
         <TextareaAutosize
           disabled

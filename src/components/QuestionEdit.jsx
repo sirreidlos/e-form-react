@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import CheckboxesQuestion from "./CheckboxesQuestion";
 import TextAnswerQuestionEdit from "./TextAnswerQuestionEdit";
+import MultipleChoiceQuestionEdit from "./MultipleChoiceQuestionEdit";
 
 export default function Question({
   number,
@@ -29,7 +30,14 @@ export default function Question({
             handleChange={handleChange}
           />
         )}
-        {kind === questionType.MultipleChoice && <p>MultipleChoice</p>}
+        {kind === questionType.MultipleChoice && (
+          <MultipleChoiceQuestionEdit
+            number={number}
+            text={text}
+            options={options}
+            handleChange={handleChange}
+          />
+        )}
         {kind === questionType.Checkboxes && <p>Checkboxes</p>}
         {kind === questionType.Dropdown && <p>Dropdown</p>}
         {kind === questionType.Date && <p>Date</p>}
@@ -48,6 +56,13 @@ export default function Question({
           <option value={questionType.Date}>Date</option>
           <option value={questionType.Time}>Time</option>
         </select>
+        <button
+          onClick={() => {
+            handleChange(number, undefined, undefined, undefined, true);
+          }}
+        >
+          x delete
+        </button>
       </div>
     </>
   );

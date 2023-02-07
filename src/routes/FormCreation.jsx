@@ -2,8 +2,9 @@ import Title from "../components/Submission/Title";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import CheckboxesQuestion from "../components/CheckboxesQuestion";
-import Question from "../components/Question";
+import QuestionEdit from "../components/QuestionEdit";
 import { useRef } from "react";
+import ApiClient from "../tools/ApiClient";
 
 export default function FormCreation() {
   const [showLogout, setShowLogout] = useState(false);
@@ -13,21 +14,65 @@ export default function FormCreation() {
     state: "Private",
   });
   const [questions, setQuestions] = useState([
-    { number: 1, text: "Question", kind: "TextAnswer", options: null },
+    { number: 1, text: "Question", kind: "TextAnswer", options: ["Option 1"] },
   ]);
+  const [message, setMessage] = useState({
+    status: "",
+    message: "",
+  });
 
   const bottomRef = useRef();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("SUBMIT CALLED");
-    setShowLogout(!showLogout);
+    ApiClient.post("/form", { ...formProperty, questions })
+      .then((res) => {
+        if (res.status !== 201) {
+          setMessage({ status: "Failure", message: res.data.message });
+          setTimeout(() => {
+            setMessage({ status: "", message: "" });
+          }, 5000);
+          return;
+        }
+
+        setMessage({ status: "Success", message: res.data.message });
+        setTimeout(() => {
+          setMessage({ status: "", message: "" });
+        }, 5000);
+      })
+      .catch((err) => {
+        setMessage({ status: "Failure", message: err.message });
+        setTimeout(() => {
+          setMessage({ status: "", message: "" });
+        }, 5000);
+      });
     // Submit the form, for example, by sending a POST request to the server with the answers array.
   };
 
-  const handleQuestionChange = (number, text, kind, options = null) => {
+  const handleQuestionChange = (
+    number,
+    text,
+    kind,
+    options,
+    deleteQuestion = false
+  ) => {
+    if (deleteQuestion === true) {
+      let currentQuestions = questions;
+      currentQuestions.splice(number - 1, 1);
+      currentQuestions = currentQuestions.map((question, index) => {
+        return {
+          number: (question.number = index + 1),
+          text: question.text,
+          kind: question.kind,
+          options: question.options,
+        };
+      });
+
+      setQuestions(currentQuestions);
+    }
     setQuestions((prevQuestions) =>
       prevQuestions.map((question) => {
+        console.log(number, text, kind, options);
         if (question.number === number) {
           return {
             number: number,
@@ -109,6 +154,23 @@ export default function FormCreation() {
           <img className=" aspect-square h-full" src="/user.png" alt="user" />
         </div>
       </header>
+
+      {message.message ? (
+        <div className="flex justify-center fade-in fade-out">
+          {message.status === "Success" ? (
+            <div className="fixed bg-green-400 m-8 py-4 px-8 rounded-lg text-white">
+              {message.message}
+            </div>
+          ) : (
+            <div className="fixed bg-red-400 m-8 py-4 px-8 rounded-lg text-white">
+              {message.message}
+            </div>
+          )}
+        </div>
+      ) : (
+        ""
+      )}
+
       <div className="bg-gray-200 py-24">
         <div className="flex justify-center">
           <form className="max-w-3xl space-y-4" onSubmit={handleSubmit}>
@@ -118,14 +180,14 @@ export default function FormCreation() {
               handleFormProperty={handleFormProperty}
             />
             {questions.map((question) => (
-              <Question
+              <QuestionEdit
                 key={question.number}
                 number={question.number}
                 text={question.text}
                 kind={question.kind}
                 options={question.options}
                 handleChange={handleQuestionChange}
-              ></Question>
+              ></QuestionEdit>
             ))}
             <div className="flex justify-between">
               <button
