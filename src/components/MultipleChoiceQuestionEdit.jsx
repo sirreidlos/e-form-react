@@ -22,7 +22,7 @@ export default function MultipleChoiceQuestionEdit({
         {options.map((option, index) => {
           return (
             <div key={index}>
-              <input type="radio" value={option} />
+              <input type="radio" value={option} disabled />
               <input
                 type="text"
                 value={option}
@@ -54,7 +54,7 @@ export default function MultipleChoiceQuestionEdit({
             ]);
           }}
         >
-          <button>+ add another option</button>
+          <button type="button">+ add another option</button>
         </div>
       </div>
     </>

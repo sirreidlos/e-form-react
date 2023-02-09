@@ -1,7 +1,7 @@
 import Title from "../components/Submission/Title";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import CheckboxesQuestion from "../components/CheckboxesQuestion";
+import CheckboxesQuestionEdit from "../components/CheckboxesQuestion";
 import QuestionEdit from "../components/QuestionEdit";
 import { useRef } from "react";
 import ApiClient from "../tools/ApiClient";
@@ -105,7 +105,7 @@ export default function FormCreation() {
         number: number,
         text: "Question",
         kind: "TextAnswer",
-        options: null,
+        options: ["Option 1"],
       };
       return [...prevQuestions, newQuestion];
     });

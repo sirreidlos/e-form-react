@@ -1,8 +1,11 @@
 import { useState } from "react";
 
-import CheckboxesQuestion from "./CheckboxesQuestion";
+import CheckboxesQuestionEdit from "./CheckboxesQuestionEdit";
 import TextAnswerQuestionEdit from "./TextAnswerQuestionEdit";
 import MultipleChoiceQuestionEdit from "./MultipleChoiceQuestionEdit";
+import DropdownQuestionEdit from "./DropdownQuestionEdit";
+import TimeQuestionEdit from "./TimeQuestionEdit";
+import DateQuestionEdit from "./DateQuestionEdit";
 
 export default function Question({
   number,
@@ -38,10 +41,24 @@ export default function Question({
             handleChange={handleChange}
           />
         )}
-        {kind === questionType.Checkboxes && <p>Checkboxes</p>}
-        {kind === questionType.Dropdown && <p>Dropdown</p>}
-        {kind === questionType.Date && <p>Date</p>}
-        {kind === questionType.Time && <p>Time</p>}
+        {kind === questionType.Checkboxes && (
+          <CheckboxesQuestionEdit
+            number={number}
+            text={text}
+            options={options}
+            handleChange={handleChange}
+          />
+        )}
+        {kind === questionType.Dropdown && (
+          <DropdownQuestionEdit
+            number={number}
+            text={text}
+            options={options}
+            handleChange={handleChange}
+          />
+        )}
+        {kind === questionType.Date && <DateQuestionEdit />}
+        {kind === questionType.Time && <TimeQuestionEdit />}
         <select
           value={kind}
           className="p-2 rounded-md"
