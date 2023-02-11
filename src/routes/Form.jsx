@@ -1,10 +1,9 @@
 import Title from "../components/Submission/Title";
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import CheckboxesQuestionEdit from "../components/CheckboxesQuestion";
+import { useEffect, useState } from "react";
 import QuestionEdit from "../components/QuestionEdit";
 import { useRef } from "react";
 import ApiClient from "../tools/ApiClient";
+import html2canvas from "html2canvas";
 
 export default function FormCreation() {
   const [showLogout, setShowLogout] = useState(false);
@@ -16,38 +15,148 @@ export default function FormCreation() {
   const [questions, setQuestions] = useState([
     { number: 1, text: "Question", kind: "TextAnswer", options: ["Option 1"] },
   ]);
+  const [answers, setAnswers] = useState([
+    { number: 1, input: "Hello world." },
+  ]);
+
+  /**
+   * Enum for message status.
+   * @readonly
+   * @enum {{name: string, hex: string}}
+   */
+  const statuses = Object.freeze({
+    SUCCESS: "SUCCESS",
+    FAILURE: "FAILURE",
+    WARNING: "WARNING",
+  });
   const [message, setMessage] = useState({
     status: "",
     message: "",
   });
 
-  const bottomRef = useRef();
+  /**
+   * Enum for form mode.
+   * @readonly
+   * @enum {{name: string, hex: string}}
+   */
+  const modes = Object.freeze({
+    CREATE: "CREATE",
+    UPDATE: "UPDATE",
+    SUBMIT: "SUBMIT",
+  });
+  const [mode, setMode] = useState(modes.CREATE);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    ApiClient.post("/form", { ...formProperty, questions })
-      .then((res) => {
-        if (res.status !== 201) {
-          setMessage({ status: "Failure", message: res.data.message });
-          setTimeout(() => {
-            setMessage({ status: "", message: "" });
-          }, 5000);
+  useEffect(() => {
+    const modes = {
+      CREATE: "CREATE",
+      UPDATE: "UPDATE",
+      SUBMIT: "SUBMIT",
+    };
+    const currentRoute = window.location.pathname;
+    if (currentRoute.startsWith("/edit/")) {
+      setMode(modes.UPDATE);
+    }
+
+    if (currentRoute.startsWith("/form/")) {
+      setMode(modes.SUBMIT);
+    }
+
+    if (!currentRoute.startsWith("/new")) {
+      const id = currentRoute.substring(6);
+      ApiClient.get(`/form/${id}`).then((res) => {
+        if (res.status !== 200) {
+          showMessage("FAILURE", res.data.message);
           return;
         }
 
-        setMessage({ status: "Success", message: res.data.message });
-        setTimeout(() => {
-          setMessage({ status: "", message: "" });
-        }, 5000);
-      })
-      .catch((err) => {
-        setMessage({ status: "Failure", message: err.message });
-        setTimeout(() => {
-          setMessage({ status: "", message: "" });
-        }, 5000);
+        setFormProperty({
+          title: res.data.title,
+          description: res.data.description,
+          state: res.data.state,
+        });
+
+        setQuestions(res.data.questions);
       });
-    // Submit the form, for example, by sending a POST request to the server with the answers array.
+    }
+  }, []);
+
+  function showMessage(status, message) {
+    setMessage({ status, message });
+    setTimeout(() => {
+      setMessage({ status: "", message: "" });
+    }, 5000);
+  }
+
+  const bottomRef = useRef();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (mode === modes.CREATE) {
+      ApiClient.post("/form", { ...formProperty, questions })
+        .then((res) => {
+          if (res.status !== 201) {
+            showMessage(statuses.FAILURE, res.data.message);
+            return;
+          }
+
+          showMessage(statuses.SUCCESS, res.data.message);
+        })
+        .catch((err) => {
+          showMessage(statuses.FAILURE, err.message);
+        });
+
+      return;
+    }
+
+    const currentRoute = window.location.pathname;
+    const id = currentRoute.substring(6);
+
+    if (mode === modes.SUBMIT) {
+      ApiClient.post(`/form/${id}`, { answers: answers }).then((res) => {
+        showMessage(statuses.SUCCESS, res.data.message);
+        return;
+      });
+    }
+
+    if (mode === modes.UPDATE) {
+      let thumbnail_string = "";
+      html2canvas(document.getElementById("content"), {
+        height: 1080,
+        scale: 0.25,
+        backgroundColor: "#e5e7eb",
+      }).then(function (canvas) {
+        thumbnail_string = canvas.toDataURL("image/png").toString();
+        ApiClient.put(`/form/${id}`, {
+          ...formProperty,
+          questions,
+          thumbnail_string,
+        })
+          .then((res) => {
+            if (res.status !== 200) {
+              showMessage(statuses.FAILURE, res.data.message);
+              return;
+            }
+            showMessage(statuses.SUCCESS, res.data.message);
+            getThumbnail64String(res.data.id);
+          })
+          .catch((err) => {
+            showMessage(statuses.FAILURE, err.message);
+          });
+      });
+      // console.log(thumbnail_string);
+    }
   };
+
+  async function getThumbnail64String() {
+    html2canvas(document.getElementById("content"), {
+      height: 1080,
+      scale: 0.25,
+    }).then(function (canvas) {
+      let myImage = canvas.toDataURL("image/png").toString();
+      return myImage;
+    });
+  }
 
   const handleQuestionChange = (
     number,
@@ -157,7 +266,7 @@ export default function FormCreation() {
 
       {message.message ? (
         <div className="flex justify-center fade-in fade-out">
-          {message.status === "Success" ? (
+          {message.status === statuses.SUCCESS ? (
             <div className="fixed bg-green-400 m-8 py-4 px-8 rounded-lg text-white">
               {message.message}
             </div>
@@ -171,7 +280,7 @@ export default function FormCreation() {
         ""
       )}
 
-      <div className="bg-gray-200 py-24">
+      <div id="content" className="bg-gray-200 py-24">
         <div className="flex justify-center">
           <form className="max-w-3xl space-y-4" onSubmit={handleSubmit}>
             <Title
@@ -204,7 +313,9 @@ export default function FormCreation() {
                 className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-400 "
                 type="submit"
               >
-                Submit
+                {mode === modes.CREATE ? "Create" : ""}
+                {mode === modes.SUBMIT ? "Submit" : ""}
+                {mode === modes.UPDATE ? "Update" : ""}
               </button>
             </div>
           </form>

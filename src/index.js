@@ -3,13 +3,14 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 
-import Root from "./routes/Root";
+import App from "./routes/App";
 
 import ErrorPage from "./ErrorPage";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
-import FormCreation from "./routes/FormCreation";
+import Form from "./routes/Form";
 
+import ApiClient from "./tools/ApiClient";
 // import dotenv from "dotenv";
 
 // dotenv.config();
@@ -17,7 +18,7 @@ import FormCreation from "./routes/FormCreation";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <App />,
     errorElement: <ErrorPage />,
   },
   {
@@ -32,7 +33,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/new",
-    element: <FormCreation />,
+    element: <Form />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/edit/:id",
+    element: <Form />,
+    loader: async ({ request, params }) => {
+      return ApiClient.get(`/form/${params.id}`).then((res) => res.data);
+    },
     errorElement: <ErrorPage />,
   },
 ]);

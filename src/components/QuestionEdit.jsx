@@ -23,6 +23,10 @@ export default function Question({
     Time: "Time",
   };
 
+  if (!options) {
+    handleChange(number, undefined, undefined, ["Option 1"]);
+  }
+
   return (
     <>
       <div className="bg-white rounded-lg p-8 space-y-8">
@@ -57,8 +61,20 @@ export default function Question({
             handleChange={handleChange}
           />
         )}
-        {kind === questionType.Date && <DateQuestionEdit />}
-        {kind === questionType.Time && <TimeQuestionEdit />}
+        {kind === questionType.Date && (
+          <DateQuestionEdit
+            number={number}
+            text={text}
+            handleChange={handleChange}
+          />
+        )}
+        {kind === questionType.Time && (
+          <TimeQuestionEdit
+            number={number}
+            text={text}
+            handleChange={handleChange}
+          />
+        )}
         <select
           value={kind}
           className="p-2 rounded-md"
@@ -74,6 +90,7 @@ export default function Question({
           <option value={questionType.Time}>Time</option>
         </select>
         <button
+          type="button"
           onClick={() => {
             handleChange(number, undefined, undefined, undefined, true);
           }}
