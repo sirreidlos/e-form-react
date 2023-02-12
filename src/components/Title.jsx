@@ -1,6 +1,11 @@
 import TextareaAutosize from "@mui/base/TextareaAutosize";
 
-export default function Title({ title, description, handleFormProperty }) {
+export default function Title({
+  title,
+  description,
+  handleFormProperty,
+  isSubmitMode,
+}) {
   return (
     <>
       <div className="bg-white rounded-xl">
@@ -10,6 +15,7 @@ export default function Title({ title, description, handleFormProperty }) {
             type="text"
             className="text-4xl w-full bg-transparent border-b border-gray-300 py-2 outline-none"
             placeholder="Form title"
+            disabled={isSubmitMode}
             value={title}
             onChange={(e) => handleFormProperty(e.target.value)}
             onBlur={() => {
@@ -21,6 +27,7 @@ export default function Title({ title, description, handleFormProperty }) {
           <TextareaAutosize
             className="w-full bg-transparent border-b border-gray-300 py-2 outline-none resize-none"
             placeholder="Form description"
+            disabled={isSubmitMode}
             value={description}
             onChange={(e) => handleFormProperty(undefined, e.target.value)}
           />

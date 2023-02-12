@@ -68,7 +68,10 @@ export default function Main() {
       <div className="bg-gray-200 px-48 pt-20 pb-6 space-y-4">
         <div className="text-2xl">Start a new form</div>
         <div className="flex justify-between">
-          <div className="flex flex-col space-y-1" onClick={createNewForm}>
+          <div
+            className="flex flex-col space-y-1 cursor-pointer"
+            onClick={createNewForm}
+          >
             <img
               src="new-form.png"
               className="rounded-xl w-64 h-36 border border-gray-300"
@@ -101,15 +104,15 @@ export default function Main() {
           />
         </div>
       </div>
-      <div className="bg-white px-48 py-6 space-y-4">
+      <div className="bg-white px-48 py-6 space-y-4 min-h-[69vh]">
         <div className="text-2xl">Recent forms</div>
         <div className="grid grid-cols-[repeat(5,_minmax(0,_16rem))] justify-between gap-y-6">
-          <Thumbnail
+          {/* <Thumbnail
             title={"Introduction Survey"}
             link={"/new"}
             image={"form1.png"}
             date="17 January 2021"
-          />
+          /> */}
           {forms.map((form) => {
             return (
               <Thumbnail

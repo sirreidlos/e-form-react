@@ -39,9 +39,11 @@ const router = createBrowserRouter([
   {
     path: "/edit/:id",
     element: <Form />,
-    loader: async ({ request, params }) => {
-      return ApiClient.get(`/form/${params.id}`).then((res) => res.data);
-    },
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/form/:id",
+    element: <Form />,
     errorElement: <ErrorPage />,
   },
 ]);

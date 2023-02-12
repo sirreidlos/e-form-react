@@ -1,6 +1,6 @@
-import Title from "../components/Submission/Title";
+import Title from "../components/Title";
 import { useEffect, useState } from "react";
-import QuestionEdit from "../components/QuestionEdit";
+import Question from "../components/Question";
 import { useRef } from "react";
 import ApiClient from "../tools/ApiClient";
 import html2canvas from "html2canvas";
@@ -15,9 +15,7 @@ export default function FormCreation() {
   const [questions, setQuestions] = useState([
     { number: 1, text: "Question", kind: "TextAnswer", options: ["Option 1"] },
   ]);
-  const [answers, setAnswers] = useState([
-    { number: 1, input: "Hello world." },
-  ]);
+  const [answers, setAnswers] = useState([]);
 
   /**
    * Enum for message status.
@@ -76,6 +74,16 @@ export default function FormCreation() {
         });
 
         setQuestions(res.data.questions);
+
+        setAnswers(() => {
+          return res.data.questions.map((question) => {
+            return {
+              number: question.number,
+              input: undefined,
+              selected_options: undefined,
+            };
+          });
+        });
       });
     }
   }, []);
@@ -113,7 +121,7 @@ export default function FormCreation() {
     const id = currentRoute.substring(6);
 
     if (mode === modes.SUBMIT) {
-      ApiClient.post(`/form/${id}`, { answers: answers }).then((res) => {
+      ApiClient.post(`/response/${id}`, { answers: answers }).then((res) => {
         showMessage(statuses.SUCCESS, res.data.message);
         return;
       });
@@ -144,7 +152,6 @@ export default function FormCreation() {
             showMessage(statuses.FAILURE, err.message);
           });
       });
-      // console.log(thumbnail_string);
     }
   };
 
@@ -181,7 +188,6 @@ export default function FormCreation() {
     }
     setQuestions((prevQuestions) =>
       prevQuestions.map((question) => {
-        console.log(number, text, kind, options);
         if (question.number === number) {
           return {
             number: number,
@@ -195,6 +201,25 @@ export default function FormCreation() {
       })
     );
   };
+
+  function handleAnswerChange(number, input, selected_options) {
+    setAnswers((prevAnswers) =>
+      prevAnswers.map((answer) => {
+        if (answer.number === number) {
+          return {
+            number: number,
+            input: input !== undefined ? input : answer.input,
+            selected_options:
+              selected_options !== undefined
+                ? selected_options
+                : answer.selected_options,
+          };
+        }
+
+        return answer;
+      })
+    );
+  }
 
   const handleFormProperty = (title, description, state) => {
     setFormProperty((prevState) => {
@@ -236,6 +261,7 @@ export default function FormCreation() {
             <input
               className="outline-none w-min flex grow shrink max-w-lg"
               type="text"
+              disabled={mode === modes.SUBMIT}
               value={formProperty.title}
               onChange={(e) => handleFormProperty(e.target.value)}
               onBlur={(e) => {
@@ -287,16 +313,19 @@ export default function FormCreation() {
               title={formProperty.title}
               description={formProperty.description}
               handleFormProperty={handleFormProperty}
+              isSubmitMode={mode === modes.SUBMIT}
             />
             {questions.map((question) => (
-              <QuestionEdit
+              <Question
                 key={question.number}
                 number={question.number}
                 text={question.text}
                 kind={question.kind}
                 options={question.options}
-                handleChange={handleQuestionChange}
-              ></QuestionEdit>
+                handleQuestionChange={handleQuestionChange}
+                handleAnswerChange={handleAnswerChange}
+                isSubmitMode={mode === modes.SUBMIT}
+              ></Question>
             ))}
             <div className="flex justify-between">
               <button
@@ -309,6 +338,7 @@ export default function FormCreation() {
               >
                 Add new question.
               </button>
+              {"MODE: " + mode}
               <button
                 className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-400 "
                 type="submit"
