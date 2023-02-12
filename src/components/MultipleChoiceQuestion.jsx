@@ -55,6 +55,7 @@ export default function MultipleChoiceQuestionEdit({
                 </label>
                 {!isSubmitMode && (
                   <button
+                    type="button"
                     onClick={() => {
                       let newOptions = options;
                       newOptions.splice(index, 1);

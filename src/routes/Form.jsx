@@ -5,7 +5,7 @@ import { useRef } from "react";
 import ApiClient from "../tools/ApiClient";
 import html2canvas from "html2canvas";
 
-export default function FormCreation() {
+export default function Form() {
   const [showLogout, setShowLogout] = useState(false);
   const [formProperty, setFormProperty] = useState({
     title: "Untitled form",
@@ -159,6 +159,7 @@ export default function FormCreation() {
     html2canvas(document.getElementById("content"), {
       height: 1080,
       scale: 0.25,
+      logging: false,
     }).then(function (canvas) {
       let myImage = canvas.toDataURL("image/png").toString();
       return myImage;

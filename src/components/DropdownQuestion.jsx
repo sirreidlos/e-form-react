@@ -29,7 +29,11 @@ export default function DropdownQuestionEdit({
             }}
           >
             {options.map((option, index) => {
-              return <option value={option}>{option}</option>;
+              return (
+                <option key={index} value={option}>
+                  {option}
+                </option>
+              );
             })}
           </select>
         )}
@@ -54,6 +58,7 @@ export default function DropdownQuestionEdit({
                   }}
                 />
                 <button
+                  type="button"
                   onClick={() => {
                     let newOptions = options;
                     newOptions.splice(index, 1);

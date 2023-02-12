@@ -6,6 +6,7 @@ import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import DropdownQuestion from "./DropdownQuestion";
 import TimeQuestion from "./TimeQuestion";
 import DateQuestion from "./DateQuestion";
+import { useEffect } from "react";
 
 export default function Question({
   number,
@@ -25,9 +26,11 @@ export default function Question({
     Time: "Time",
   };
 
-  if (!options) {
-    handleQuestionChange(number, undefined, undefined, ["Option 1"]);
-  }
+  useEffect(() => {
+    if (!options) {
+      handleQuestionChange(number, undefined, undefined, ["Option 1"]);
+    }
+  }, [handleQuestionChange, number, options]);
 
   return (
     <>
