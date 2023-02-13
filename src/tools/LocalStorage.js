@@ -36,5 +36,9 @@ export const getToken = () => {
   return item.value;
 };
 
+export const delToken = () => {
+  localStorage.removeItem("token");
+};
+
 /* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
-export default { getToken, setToken };
+export default { getToken, setToken, delToken };

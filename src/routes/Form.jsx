@@ -2,10 +2,14 @@ import Title from "../components/Title";
 import { useEffect, useState } from "react";
 import Question from "../components/Question";
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import ApiClient from "../tools/ApiClient";
 import html2canvas from "html2canvas";
+import LocalStorage from "../tools/LocalStorage";
 
 export default function Form() {
+  const navigate = useNavigate();
+
   const [showLogout, setShowLogout] = useState(false);
   const [formProperty, setFormProperty] = useState({
     title: "Untitled form",
@@ -59,34 +63,53 @@ export default function Form() {
       setMode(modes.SUBMIT);
     }
 
+    function showMessageAndRedirect(status, message, redirectTo = undefined) {
+      setMessage({ status, message });
+      setTimeout(() => {
+        setMessage({ status: "", message: "" });
+        if (redirectTo) {
+          navigate(redirectTo);
+        } else {
+          navigate(-1);
+        }
+      }, 5000);
+    }
+
     if (!currentRoute.startsWith("/new")) {
       const id = currentRoute.substring(6);
-      ApiClient.get(`/form/${id}`).then((res) => {
-        if (res.status !== 200) {
-          showMessage("FAILURE", res.data.message);
-          return;
-        }
+      ApiClient.get(`/form/${id}`)
+        .then((res) => {
+          if (res.status !== 200) {
+            showMessage("FAILURE", res.data.message);
+            return;
+          }
 
-        setFormProperty({
-          title: res.data.title,
-          description: res.data.description,
-          state: res.data.state,
-        });
-
-        setQuestions(res.data.questions);
-
-        setAnswers(() => {
-          return res.data.questions.map((question) => {
-            return {
-              number: question.number,
-              input: undefined,
-              selected_options: undefined,
-            };
+          setFormProperty({
+            title: res.data.title,
+            description: res.data.description,
+            state: res.data.state,
           });
+
+          setQuestions(res.data.questions);
+
+          setAnswers(() => {
+            return res.data.questions.map((question) => {
+              return {
+                number: question.number,
+                input:
+                  question.kind === "Dropdown"
+                    ? question.options[0]
+                    : undefined,
+                selected_options: undefined,
+              };
+            });
+          });
+        })
+        .catch((err) => {
+          showMessageAndRedirect("FAILURE", err.message);
         });
-      });
     }
-  }, []);
+  }, [navigate]);
 
   function showMessage(status, message) {
     setMessage({ status, message });
@@ -280,14 +303,46 @@ export default function Form() {
           </div>
         </div>
 
-        {showLogout ? <div>todo!("LOGOUT")</div> : ""}
-        <div
-          className="cursor-pointer"
-          onClick={() => setShowLogout((showLogout) => !showLogout)}
-          tabIndex="0"
-          role="button"
-        >
-          <img className=" aspect-square h-full" src="/user.png" alt="user" />
+        <div className="flex gap-6">
+          {showLogout ? (
+            <div className="flex justify-center">
+              <div className="right-4 top-[4.5rem] fixed">
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg drop-shadow-lg"
+                  onClick={() => {
+                    LocalStorage.delToken();
+                    navigate("/");
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          {mode === modes.UPDATE && (
+            <button
+              type="button"
+              className="bg-blue-500 px-4 text-white rounded-xl"
+              onClick={() => {
+                const id = window.location.pathname.substring(6);
+                navigate(`/form/${id}`);
+              }}
+            >
+              Form Link
+            </button>
+          )}
+
+          <div
+            className="cursor-pointer"
+            onClick={() => setShowLogout((showLogout) => !showLogout)}
+            tabIndex="0"
+            role="button"
+          >
+            <img className=" aspect-square h-full" src="/user.png" alt="user" />
+          </div>
         </div>
       </header>
 
