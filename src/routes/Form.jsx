@@ -323,16 +323,28 @@ export default function Form() {
             ""
           )}
           {mode === modes.UPDATE && (
-            <button
-              type="button"
-              className="bg-blue-500 px-4 text-white rounded-xl"
-              onClick={() => {
-                const id = window.location.pathname.substring(6);
-                navigate(`/form/${id}`);
-              }}
-            >
-              Form Link
-            </button>
+            <>
+              <a
+                className="flex items-center bg-blue-500 px-4 text-white rounded-xl"
+                href={`/response/${window.location.pathname.substring(6)}`}
+              >
+                <span>Check Responses</span>
+              </a>
+              <button
+                type="button"
+                className="bg-blue-500 px-4 text-white rounded-xl"
+                onClick={() => {
+                  var link = `${
+                    window.location.origin
+                  }/form/${window.location.pathname.substring(6)}`;
+                  console.log(link);
+                  navigator.clipboard.writeText(link);
+                  showMessage(statuses.SUCCESS, "Link Copied.");
+                }}
+              >
+                Copy Form Link
+              </button>
+            </>
           )}
 
           <div
@@ -384,16 +396,21 @@ export default function Form() {
               ></Question>
             ))}
             <div className="flex justify-between">
-              <button
-                className="bg-white text-gray-400 p-2 rounded-lg hover:bg-gray-100 hover:text-gray-400"
-                onClick={() => {
-                  addNewQuestion();
-                  scrollToBottom();
-                }}
-                type="button"
-              >
-                Add new question.
-              </button>
+              {mode !== modes.SUBMIT ? (
+                <button
+                  className="bg-white text-gray-400 p-2 rounded-lg hover:bg-gray-100 hover:text-gray-400"
+                  onClick={() => {
+                    addNewQuestion();
+                    scrollToBottom();
+                  }}
+                  type="button"
+                >
+                  Add new question.
+                </button>
+              ) : (
+                ""
+              )}
+
               {"MODE: " + mode}
               <button
                 className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-400 "

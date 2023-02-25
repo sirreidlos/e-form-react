@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import CheckboxesQuestion from "./CheckboxesQuestion";
 import TextAnswerQuestion from "./TextAnswerQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
@@ -34,7 +32,7 @@ export default function Question({
 
   return (
     <>
-      <div className="bg-white rounded-lg p-8 space-y-8">
+      <div className="bg-white rounded-lg p-8 space-y-8 border border-gray-300">
         {kind === questionType.TextAnswer && (
           <TextAnswerQuestion
             number={number}

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import TextareaAutosize from "@mui/base/TextareaAutosize";
 
 export default function MultipleChoiceQuestionEdit({

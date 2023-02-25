@@ -1,12 +1,6 @@
 import TextareaAutosize from "@mui/base/TextareaAutosize";
 
-export default function TextAnswerQuestionEdit({
-  number,
-  text,
-  handleQuestionChange,
-  handleAnswerChange,
-  isSubmitMode,
-}) {
+export default function TimeQuestionEdit({ number, text, answer }) {
   // const [question, setQuestion] = useState("Question");
 
   return (
@@ -15,20 +9,15 @@ export default function TextAnswerQuestionEdit({
         <TextareaAutosize
           type="text"
           className="text-2xl w-full bg-transparent border-b border-gray-300 py-2 outline-none resize-none"
-          disabled={isSubmitMode}
-          onChange={(e) => {
-            handleQuestionChange(number, e.target.value);
-          }}
           value={text}
           placeholder="Question"
+          readOnly
         />
         <TextareaAutosize
           className="w-full bg-transparent border-b border-gray-300 py-2 outline-none resize-none"
-          placeholder="Text answer"
-          disabled={!isSubmitMode}
-          onChange={(e) => {
-            handleAnswerChange(number, e.target.value, undefined);
-          }}
+          placeholder="Time"
+          readOnly
+          value={answer.input}
         />
       </div>
     </>

@@ -2,7 +2,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import ApiClient from "../tools/ApiClient";
 import LocalStorage from "../tools/LocalStorage";
-import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { EventSourcePolyfill } from "event-source-polyfill";
+
+import QuestionResponse from "../components/response/QuestionResponse";
+import TitleResponse from "../components/response/TitleResponse";
 
 export default function Response() {
   /**
@@ -23,7 +26,11 @@ export default function Response() {
     description: "",
     state: "Private",
   });
+  const [questions, setQuestions] = useState([
+    { number: 1, text: "Question", kind: "TextAnswer", options: ["Option 1"] },
+  ]);
   const [responses, setResponses] = useState([]);
+  const [currentResponse, setCurrentResponse] = useState({});
 
   useEffect(() => {
     const formId = window.location.pathname.substring(10);
@@ -40,7 +47,7 @@ export default function Response() {
         state: res.data.state,
       });
 
-      console.log("REQUESTED FOR FORM");
+      setQuestions(res.data.questions);
       ApiClient.get(`/response/${formId}`)
         .then((res) => {
           if (res.status !== 200) {
@@ -51,47 +58,28 @@ export default function Response() {
           console.log("REQUESTED FOR RESPONSES");
 
           setResponses(res.data);
+          setCurrentResponse({ idx: 0, ...res.data[0] });
+
           const token = LocalStorage.getToken();
 
-          fetchEventSource(`http://127.255.255.1/stream/${formId}`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            onmessage(ev) {
-              console.log(ev.data);
-              setResponses((prevResponses) => {
-                return [...prevResponses, JSON.parse(ev.data)];
-              });
-            },
+          const evtSrc = new EventSourcePolyfill(
+            `http://127.255.255.1/stream/${formId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          evtSrc.addEventListener("message", (ev) => {
+            const data = JSON.parse(ev.data);
+            setResponses((prevResponses) => {
+              if (prevResponses[prevResponses.length - 1]._id === data._id) {
+                return prevResponses;
+              }
+              return [...prevResponses, JSON.parse(ev.data)];
+            });
           });
-
-          //   console.log(token);
-          //   var eventSourceInitDict = {
-          //     headers: { Authorization: `Bearer ${token}` },
-          //   };
-          //   const source = new EventSource(
-          //     `http://127.255.255.1/stream/${formId}`,
-          //     eventSourceInitDict
-          //   );
-
-          //   source.onmessage((e) => {
-          //     console.log(e);
-          //   });
-          //   ApiClient.get(`/stream/${formId}`, { responseType: "text" })
-          //     .then((res) => {
-          //       const source = new EventSource(res.request.responseURL, {
-          //         headers: res.request.getAllResponseHeaders(),
-          //       });
-          //       console.log("source");
-
-          //       source.onmessage = (event) => {
-          //         console.log(`Received SSE ${event.data}`);
-          //       };
-          //     })
-          //     .catch((err) => {
-          //       showMessage("FAILURE", err.message);
-          //     });
         })
         .catch((err) => {
           showMessage("FAILURE", err.message);
@@ -146,14 +134,76 @@ export default function Response() {
       ) : (
         ""
       )}
-      {responses.map((response, index) => {
-        return (
-          <div key={index}>
-            <div>{response._id}</div>
-            <div>{response.responder}</div>
+
+      <div id="content" className="py-24">
+        <div className="flex justify-center">
+          <div className="max-w-3xl space-y-4">
+            {responses.length > 0 ? (
+              <>
+                <div className="flex justify-between">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (currentResponse.idx - 1 < 0) {
+                        setCurrentResponse({
+                          idx: responses.length - 1,
+                          ...responses[responses.length - 1],
+                        });
+                        return;
+                      }
+
+                      setCurrentResponse({
+                        idx: currentResponse.idx - 1,
+                        ...responses[currentResponse.idx - 1],
+                      });
+                    }}
+                  >
+                    prev
+                  </button>
+                  {currentResponse.idx + 1}/{responses.length}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (currentResponse.idx + 1 >= responses.length) {
+                        setCurrentResponse({
+                          idx: 0,
+                          ...responses[0],
+                        });
+                        return;
+                      }
+
+                      setCurrentResponse({
+                        idx: currentResponse.idx + 1,
+                        ...responses[currentResponse.idx + 1],
+                      });
+                    }}
+                  >
+                    next
+                  </button>
+                </div>
+                <TitleResponse
+                  title={formProperty.title}
+                  description={formProperty.description}
+                />
+              </>
+            ) : (
+              "No responses found"
+            )}
+            {currentResponse.answers &&
+              questions.map((question, idx) => (
+                <QuestionResponse
+                  key={question.number}
+                  number={question.number}
+                  text={question.text}
+                  kind={question.kind}
+                  options={question.options}
+                  answer={currentResponse.answers[idx]}
+                  responseId={currentResponse._id}
+                />
+              ))}
           </div>
-        );
-      })}
+        </div>
+      </div>
     </>
   );
 }
