@@ -1,26 +1,28 @@
 import { Link } from "react-router-dom";
+import ApiClient from "../tools/ApiClient";
 
 export default function Thumbnail({
+  id,
   title,
   link,
   image = null,
   thumbnail_string = null,
-  date = "",
+  showMessage,
+  updateHandler,
 }) {
-  // let blob = undefined;
+  function deleteForm() {
+    ApiClient.delete(`/form/${id}`)
+      .then((res) => {
+        if (res.status !== 200) {
+          showMessage("FAILURE", res.data.message);
+          return;
+        }
 
-  // if (thumbnail_string) {
-  //   let base64Image = thumbnail_string.split(",")[1];
-  //   console.log(base64Image);
-  //   const binaryImage = atob(base64Image);
-  //   const uint8Array = new Uint8Array(binaryImage.length);
-  //   for (let i = 0; i < binaryImage.length; i++) {
-  //     uint8Array[i] = binaryImage.charCodeAt(i);
-
-  //     const mimeType = "image/png";
-  //     blob = new Blob([uint8Array], { type: mimeType });
-  //   }
-  // }
+        updateHandler(id);
+        showMessage("SUCCESS", res.data.message);
+      })
+      .catch((err) => showMessage("FAILURE", err));
+  }
   return (
     <>
       <div className="flex flex-col space-y-1">
@@ -37,9 +39,9 @@ export default function Thumbnail({
             alt={image}
           />
         </Link>
-        <div>
+        <div className="flex justify-between">
           <p className="text-lg">{title}</p>
-          {date ? <p className=" text-gray-500">{date}</p> : ""}
+          <button onClick={deleteForm}>&times;</button>
         </div>
       </div>
     </>

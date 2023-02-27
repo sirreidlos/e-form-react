@@ -411,7 +411,6 @@ export default function Form() {
                 ""
               )}
 
-              {"MODE: " + mode}
               <button
                 className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-400 "
                 type="submit"
