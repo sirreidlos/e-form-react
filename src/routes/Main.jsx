@@ -105,7 +105,7 @@ export default function Main() {
           </Link>
         )}
         {display === displayMode.TEMPLATE && (
-          <button onClick={() => setDisplay(displayMode.FORM)}>{"<"}</button>
+          <button onClick={() => setDisplay(displayMode.FORM)}>{"Back"}</button>
         )}
         <div className="flex gap-24 justify-between items-center">
           {/* <div className="bg-gray-200 w-[48rem] px-4 py-2 rounded-md">
@@ -171,7 +171,7 @@ export default function Main() {
                 className="rounded-xl w-64 h-36 border border-gray-300"
                 alt="new-form.png"
               />
-              <div>
+              <div> 
                 <p className="text-lg">Create new</p>
               </div>
             </div>
