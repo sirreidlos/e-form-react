@@ -98,10 +98,10 @@ export default function Main() {
 
   return (
     <>
-      <header className="fixed bg-white py-2 px-4 flex w-screen justify-between">
+      <header className="fixed  bg-white py-2 px-4 flex w-screen justify-between drop-shadow-md hover:drop-shadow-xl">
         {display === displayMode.FORM && (
           <Link to="/">
-            <img src="/E-Form.png" alt="e form" />
+            <img class="relative h-17 w-21 top-2 " src="/E-Form.png" alt="e form" />
           </Link>
         )}
         {display === displayMode.TEMPLATE && (
@@ -129,7 +129,7 @@ export default function Main() {
           tabIndex="0"
           role="button"
         >
-          <img src="/user.png" alt="user" />
+          <img src="user.png" alt="user" />
         </div>
       </header>
 
@@ -150,11 +150,11 @@ export default function Main() {
       )}
 
       {display === displayMode.FORM && (
-        <div className="bg-gray-200 px-48 pt-20 pb-6 space-y-4">
+        <div className=" bg-gray-100 px-48 pt-20 pb-6 space-y-2">
           <div className="flex justify-between">
-            <div className="text-2xl">Start a new form</div>
+            <div className="text-gray-600 font-semibold text-2xl">Start a new form</div>
             <button
-              className="text-2xl hover:text-gray-500"
+              className="text-gray-600 font-medium text-2xl"
               type="button"
               onClick={() => setDisplay(displayMode.TEMPLATE)}
             >
@@ -172,7 +172,7 @@ export default function Main() {
                 alt="new-form.png"
               />
               <div> 
-                <p className="text-lg">Create new</p>
+                <p className="font-medium ">Create new</p>      
               </div>
             </div>
 
