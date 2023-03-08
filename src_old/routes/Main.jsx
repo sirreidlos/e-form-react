@@ -37,7 +37,7 @@ export default function Main() {
           text: "Question",
           kind: "TextAnswer",
           options: null,
-        },
+        }, 
       ],
     }).then((res) => {
       if (res.status === 201) {
