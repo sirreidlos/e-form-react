@@ -35,7 +35,7 @@ export default function Thumbnail({
                 ? thumbnail_string
                 : "placeholder-16-9.png"
             }
-            className="rounded-2xl w-64 h-46 border border-gray-400"
+            className="rounded-xl w-64 h-36 border border-gray-300"
             alt={image}
           />
         </Link>

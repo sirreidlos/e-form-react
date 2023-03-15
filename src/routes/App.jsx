@@ -6,5 +6,4 @@ export default function App() {
   let token = LocalStorage.getToken();
 
   return <>{token ? <Main /> : <Landing />}</>;
-  // return <>App.jsx</>;
 }

@@ -17,7 +17,7 @@ export default function TextAnswerQuestionEdit({ number, text, answer }) {
           className="w-full bg-transparent border-b border-gray-300 py-2 outline-none resize-none"
           placeholder="Text answer"
           readOnly
-          value={answer.input}
+          value={answer}
         />
       </div>
     </>

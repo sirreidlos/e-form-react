@@ -6,13 +6,13 @@ import "./index.css";
 import App from "./routes/App";
 
 import ErrorPage from "./ErrorPage";
-import Form from "./routes/Form";
+// import Form from "./routes/Form";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
-import Response from "./routes/Response";
+// import Response from "./routes/Response";
 
 import ApiClient from "./tools/ApiClient";
-// import dotenv from "dotenv";
+// import dotenv from "dotenv";        
 
 // dotenv.config();
 
@@ -30,26 +30,6 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/new",
-    element: <Form />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/edit/:id",
-    element: <Form />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/form/:id",
-    element: <Form />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/response/:id",
-    element: <Response />,
     errorElement: <ErrorPage />,
   },
 ]);
