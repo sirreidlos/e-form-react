@@ -129,7 +129,7 @@ export default function Main() {
                 <input
                     type="text"
                     placeholder="Search"
-                    className="w-full py-3 pl-12 pr-4 text-gray-500 border rounded-lg outline-none bg-gray-50 focus:bg-white focus:border-indigo-500" 
+                    className=" w-4/3  py-3 pl-12 pr-4 text-gray-500 border rounded-lg outline-none bg-gray-50 focus:bg-white focus:border-indigo-500" 
                 />
             </div>
         </form>
@@ -137,7 +137,7 @@ export default function Main() {
         {showLogout ? <div>todo!("LOGOUT")</div> : ""}
         <div
           className="cursor-pointer pointer-events-none"
-          onClick={() => setShowLogout((showLogout) => !showLogout)}
+          onClick={() => setShowLogout((showLogout) => !showLogout)}ju
           tabIndex="0"
           role="button"
         >
@@ -162,11 +162,11 @@ export default function Main() {
       )}
 
       {display === displayMode.FORM && (
-        <div className=" bg-gray-100 px-48 pt-20 pb-6 space-y-2">
+        <div className="bg-gray-100 px-48 pt-20 pb-6 space-y-2">
           <div className="flex justify-between">
-            <div className="text-gray-600 font-semibold text-2xl">Start a new form</div>
+            <div className="text-gray-800 font-sans font-medium text-2xl">Start a new form</div>
             <button
-              className="text-gray-600 font-medium text-2xl"
+              className="text-gray-800 font-medium text-2xl"
               type="button"
               onClick={() => setDisplay(displayMode.TEMPLATE)}
             >
@@ -211,9 +211,9 @@ export default function Main() {
           </div>
         </div>
       )}
-      <div className="bg-white px-48 py-6 space-y-4 min-h-full h-full">
+      <div className="bg-white px-48 py-6 space-y-4 min-h-sreen h-screen">
         <div className="text-2xl">
-          {display === displayMode.FORM ? "Recent forms" : "Template gallery"}
+          {display === displayMode.FORM ? "Recent forms" : "Template Gallery"}
         </div>
         <div className="grid grid-cols-[repeat(5,_minmax(0,_16rem))] justify-between gap-y-6">
           {display === displayMode.FORM &&
