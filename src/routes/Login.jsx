@@ -46,8 +46,8 @@ export default function Login() {
   return (
     <div className="h-screen w-screen flex justify-center items-center bg-gray-200">
       <div
-			class="p-16 h-[38rem] flex-col flex gap-y-8 items-center absolute bg-gradient-to-r w-[32rem]  from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-12 sm:rounded-3xl left-96">
-		</div>  +
+			class="p-16 h-[37rem] flex-col flex gap-y-8 items-center absolute bg-gradient-to-r w-[32rem]  from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-12 sm:rounded-3xl left-96">
+		</div> 
       <div className="p-16 h-[36rem] flex-col flex gap-y-8 items-center justify-center bg-white rounded-2xl absolute left-96">
         <img src="/E-Form.png" alt="e form" />
         <h1 className="text-3xl font-bold">Login</h1>
@@ -55,7 +55,7 @@ export default function Login() {
           onSubmit={handleSubmit}
           className="flex flex-col gap-y-6 [&>input]:border-b-2"
         >
-          <div className="flex flex-col gap-y-4 [&>input]:border-b-2">
+          <div className="flex flex-col gap-y-8 [&>input]:border-b-2">
             {/* <input
               type="text"
               name="username"
@@ -83,7 +83,7 @@ export default function Login() {
             If you don’t have an account.{" "}
             <Link
               to="/register"
-              className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 font-bold"
+              className="underline text-blue-600 hover:text-blue-800 visited:text-sky-600 font-bold"
             >
               Register Here
             </Link>
