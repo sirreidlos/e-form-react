@@ -53,9 +53,9 @@ export default function Register() {
 
   return (
     <div className="min-h-screen py-40 bg-gradient-to-b from-yellow-400 via-red-500 to-pink-500">
-      <div className="container mx-auto">
-        <div className="flex w-8/12 bg-white rounded-xl mx-auto shadow-lg overflow-hidden">
-      <div className="p-16 h-[36rem] flex-col flex gap-y-8 items-center bg-white rounded-2xl w-1/2">
+    <div className="container mx-auto">
+      <div className="flex w-8/12 bg-white rounded-xl mx-auto shadow-lg overflow-hidden">
+    <div className="p-16 h-[36rem] flex-col flex gap-y-8 items-center bg-white rounded-2xl w-1/2">
         <img src="/E-Form.png" alt="e form" />
         <h1 className="text-3xl font-bold">Register</h1>
         <form

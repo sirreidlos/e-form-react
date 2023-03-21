@@ -31,6 +31,8 @@ export default function Response() {
   ]);
   const [responses, setResponses] = useState([]);
   const [currentResponse, setCurrentResponse] = useState({});
+  const [isSummaryMode, setIsSummaryMode] = useState(false);
+  const [summarized, setSummarized] = useState([]);
 
   useEffect(() => {
     const formId = window.location.pathname.substring(10);
@@ -48,6 +50,14 @@ export default function Response() {
       });
 
       setQuestions(res.data.questions);
+      ApiClient.get(`/chart/${formId}`).then((res) => {
+        if (res.status !== 200) {
+          showMessage("FAILURE", res.data.message);
+          return;
+        }
+
+        setSummarized(res.data);
+      });
       ApiClient.get(`/response/${formId}`)
         .then((res) => {
           if (res.status !== 200) {
@@ -78,6 +88,15 @@ export default function Response() {
                 return prevResponses;
               }
               return [...prevResponses, JSON.parse(ev.data)];
+            });
+
+            ApiClient.get(`/chart/${formId}`).then((res) => {
+              if (res.status !== 200) {
+                showMessage("FAILURE", res.data.message);
+                return;
+              }
+
+              setSummarized(res.data);
             });
           });
         })
@@ -158,7 +177,7 @@ export default function Response() {
                       });
                     }}
                   >
-                    prev
+                    {"<"}
                   </button>
                   {currentResponse.idx + 1}/{responses.length}
                   <button
@@ -178,7 +197,7 @@ export default function Response() {
                       });
                     }}
                   >
-                    next
+                    {">"}
                   </button>
                 </div>
                 <TitleResponse
@@ -199,6 +218,8 @@ export default function Response() {
                   options={question.options}
                   answer={currentResponse.answers[idx]}
                   responseId={currentResponse._id}
+                  isSummaryMode={isSummaryMode}
+                  summarizedData={summarized[question.number]}
                 />
               ))}
           </div>
