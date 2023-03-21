@@ -16,10 +16,10 @@ function Uploader() {
           }
         }} />
         {image ?
-        <img src={image} width={150} height={150} alt={fileName} />
+        <img className="img" src={image} width={150} height={150} alt={fileName} />
         :
         <>
-        <img src="./Writing.png" alt="eform " className="shadow-md rounded-3xl  "/>
+        <img src="./Writing.png" alt="eform " className="shadow-md rounded-3xl img"/>
         </>
       }
     </div>
