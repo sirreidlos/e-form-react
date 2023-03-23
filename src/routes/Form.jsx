@@ -145,10 +145,20 @@ export default function Form() {
     const id = currentRoute.substring(6);
 
     if (mode === modes.SUBMIT) {
-      ApiClient.post(`/response/${id}`, { answers: answers }).then((res) => {
-        showMessage(statuses.SUCCESS, res.data.message);
-        return;
-      });
+      ApiClient.post(`/response/${id}`, { answers: answers })
+        .then((res) => {
+          if (res.status !== 201) {
+            showMessage(statuses.FAILURE, res.data.message);
+            return;
+          }
+
+          showMessage(statuses.SUCCESS, res.data.message);
+        })
+        .catch((err) => {
+          showMessage(statuses.FAILURE, err.message);
+        });
+
+      return;
     }
 
     if (mode === modes.UPDATE) {
@@ -306,7 +316,7 @@ export default function Form() {
 
         <div className="flex gap-6">
           {showLogout ? (
-            <div className="flex justify-center">
+            <div className="flex justify-center fixed">
               <div className="right-4 top-[4.5rem] fixed">
                 <button
                   type="button"
@@ -378,11 +388,9 @@ export default function Form() {
       <div id="content" className="bg-gray-200 py-24">
         <div className="flex justify-center">
           <form className="max-w-3xl space-y-4" onSubmit={handleSubmit}>
-  <div className="bg-white rounded-xl border border-gray-300">
-        <div className="p-8 space-y-2">
-            <Uploader />
-                </div>
-            </div>
+            {/* <div className="bg-white rounded-xl border border-gray-300">
+              <div className="p-8 space-y-2"><Uploader /></div>
+            </div> */}
             <Title
               title={formProperty.title}
               description={formProperty.description}

@@ -3,11 +3,12 @@ import { useEffect } from "react";
 import ApiClient from "../tools/ApiClient";
 import LocalStorage from "../tools/LocalStorage";
 import { EventSourcePolyfill } from "event-source-polyfill";
-
+import { useNavigate } from "react-router-dom";
 import QuestionResponse from "../components/response/QuestionResponse";
 import TitleResponse from "../components/response/TitleResponse";
 
 export default function Response() {
+  const navigate = useNavigate();
   /**
    * Enum for message status.
    * @readonly
@@ -31,7 +32,7 @@ export default function Response() {
   ]);
   const [responses, setResponses] = useState([]);
   const [currentResponse, setCurrentResponse] = useState({});
-  const [isSummaryMode, setIsSummaryMode] = useState(false);
+  const [isSummaryMode, setIsSummaryMode] = useState(true);
   const [summarized, setSummarized] = useState([]);
 
   useEffect(() => {
@@ -84,10 +85,14 @@ export default function Response() {
           evtSrc.addEventListener("message", (ev) => {
             const data = JSON.parse(ev.data);
             setResponses((prevResponses) => {
-              if (prevResponses[prevResponses.length - 1]._id === data._id) {
+              if (prevResponses.length === 0) {
+                setCurrentResponse({ idx: 0, ...data });
+              }
+              if (prevResponses.some((item) => item._id === data._id)) {
                 return prevResponses;
               }
-              return [...prevResponses, JSON.parse(ev.data)];
+
+              return [...prevResponses, data];
             });
 
             ApiClient.get(`/chart/${formId}`).then((res) => {
@@ -115,29 +120,72 @@ export default function Response() {
 
   return (
     <>
-      <header className="fixed bg-white py-2 px-4 max-h-16 flex w-screen justify-between drop-shadow">
-        <div className="flex gap-24 justify-between items-center">
-          <div className="w-max px-4 py-2 rounded-md">
-            <input
-              className="outline-none w-min flex grow shrink max-w-lg"
-              type="text"
-              disabled
-              value={formProperty.title}
-            />
+      <header className="fixed bg-white drop-shadow flex flex-col justify-center align-middle">
+        <div className=" py-2 px-4 max-h-16 flex w-screen justify-between ">
+          <div className="flex gap-24 justify-between items-center">
+            <div className="w-max px-4 py-2 rounded-md">
+              <input
+                className="outline-none w-min flex grow shrink max-w-lg"
+                type="text"
+                disabled
+                value={formProperty.title}
+              />
+            </div>
+          </div>
+
+          {showLogout ? (
+            <div className="flex justify-center fixed">
+              <div className="right-4 top-[4.5rem] fixed">
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg drop-shadow-lg"
+                  onClick={() => {
+                    LocalStorage.delToken();
+                    navigate("/");
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+
+          <div
+            className="cursor-pointer"
+            onClick={() => setShowLogout((showLogout) => !showLogout)}
+            tabIndex="0"
+            role="button"
+          >
+            <img className=" aspect-square h-full" src="/user.png" alt="user" />
           </div>
         </div>
-
-        {showLogout ? <div>todo!("LOGOUT")</div> : ""}
-        <div
-          className="cursor-pointer"
-          onClick={() => setShowLogout((showLogout) => !showLogout)}
-          tabIndex="0"
-          role="button"
-        >
-          <img className=" aspect-square h-full" src="/user.png" alt="user" />
+        <div className="flex justify-center gap-4">
+          <button
+            type="button"
+            className={`px-4 border-b-2 rounded-sm ${
+              !isSummaryMode ? "border-b-transparent" : "border-b-violet-800"
+            }`}
+            onClick={() => {
+              setIsSummaryMode(true);
+            }}
+          >
+            Summary
+          </button>
+          <button
+            type="button"
+            className={`px-4 border-b-2 rounded-sm ${
+              isSummaryMode ? "border-b-transparent" : "border-b-violet-800"
+            }`}
+            onClick={() => {
+              setIsSummaryMode(false);
+            }}
+          >
+            Detail
+          </button>
         </div>
       </header>
-
       {message.message ? (
         <div className="flex justify-center fade-in fade-out">
           {message.status === statuses.SUCCESS ? (
@@ -156,50 +204,56 @@ export default function Response() {
 
       <div id="content" className="py-24">
         <div className="flex justify-center">
-          <div className="max-w-3xl space-y-4">
+          <div
+            className={`max-w-3xl space-y-4 ${isSummaryMode ? "pt-10" : ""}`}
+          >
             {responses.length > 0 ? (
               <>
-                <div className="flex justify-between">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (currentResponse.idx - 1 < 0) {
-                        setCurrentResponse({
-                          idx: responses.length - 1,
-                          ...responses[responses.length - 1],
-                        });
-                        return;
-                      }
+                {!isSummaryMode ? (
+                  <div className="flex justify-between">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (currentResponse.idx - 1 < 0) {
+                          setCurrentResponse({
+                            idx: responses.length - 1,
+                            ...responses[responses.length - 1],
+                          });
+                          return;
+                        }
 
-                      setCurrentResponse({
-                        idx: currentResponse.idx - 1,
-                        ...responses[currentResponse.idx - 1],
-                      });
-                    }}
-                  >
-                    {"<"}
-                  </button>
-                  {currentResponse.idx + 1}/{responses.length}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (currentResponse.idx + 1 >= responses.length) {
                         setCurrentResponse({
-                          idx: 0,
-                          ...responses[0],
+                          idx: currentResponse.idx - 1,
+                          ...responses[currentResponse.idx - 1],
                         });
-                        return;
-                      }
+                      }}
+                    >
+                      {"<"}
+                    </button>
+                    {currentResponse.idx + 1}/{responses.length}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (currentResponse.idx + 1 >= responses.length) {
+                          setCurrentResponse({
+                            idx: 0,
+                            ...responses[0],
+                          });
+                          return;
+                        }
 
-                      setCurrentResponse({
-                        idx: currentResponse.idx + 1,
-                        ...responses[currentResponse.idx + 1],
-                      });
-                    }}
-                  >
-                    {">"}
-                  </button>
-                </div>
+                        setCurrentResponse({
+                          idx: currentResponse.idx + 1,
+                          ...responses[currentResponse.idx + 1],
+                        });
+                      }}
+                    >
+                      {">"}
+                    </button>
+                  </div>
+                ) : (
+                  ""
+                )}
                 <TitleResponse
                   title={formProperty.title}
                   description={formProperty.description}

@@ -40,7 +40,7 @@ export default function DropdownQuestionEdit({
         {!isSubmitMode &&
           options.map((option, index) => {
             return (
-              <div key={index}>
+              <div key={index} className="flex gap-2">
                 {/* <input type="checkbox" value={option} disabled /> */}
                 {index}
                 <input
@@ -58,6 +58,7 @@ export default function DropdownQuestionEdit({
                   }}
                 />
                 <button
+                  className="hover:bg-gray-200 rounded-full h-6 w-6"
                   type="button"
                   onClick={() => {
                     let newOptions = options;
@@ -70,7 +71,7 @@ export default function DropdownQuestionEdit({
                     );
                   }}
                 >
-                  delete option
+                  🞫
                 </button>
               </div>
             );
@@ -85,7 +86,9 @@ export default function DropdownQuestionEdit({
               ]);
             }}
           >
-            <button type="button">+ add another option</button>
+            <button type="button" className="text-gray-400">
+              + Add option
+            </button>
           </div>
         )}
       </div>

@@ -20,7 +20,7 @@ export default function CheckboxesResponse({ number, text, options, answer }) {
         />
         {options.map((option, index) => {
           return (
-            <div key={index}>
+            <div key={index} className="flex gap-2">
               <input
                 type="checkbox"
                 value={option}

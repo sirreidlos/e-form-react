@@ -6,11 +6,11 @@ import TimeResponse from "./TimeResult";
 import DateResponse from "./DateResult";
 import { Chart, ArcElement, Tooltip, Legend, Colors } from "chart.js";
 import CheckboxesSummary from "./CheckboxesSummary";
-// import DateSummary from "./DateSummary";
-// import DropdownSummary from "./DropdownSummary";
-// import MultipleChoiceSummary from "./MultipleChoiceSummary";
-// import TextAnswerSummary from "./TextAnswerSummary";
-// import TimeSummary from "./TimeSummary";
+import DateSummary from "./DateSummary";
+import DropdownSummary from "./DropdownSummary";
+import MultipleChoiceSummary from "./MultipleChoiceSummary";
+import TextAnswerSummary from "./TextAnswerSummary";
+import TimeSummary from "./TimeSummary";
 
 Chart.register(ArcElement, Tooltip, Legend, Colors);
 
@@ -32,8 +32,6 @@ export default function Response({
     Date: "Date",
     Time: "Time",
   };
-
-  console.log(summarizedData);
 
   return (
     <>
@@ -77,18 +75,20 @@ export default function Response({
           <TimeResponse number={number} text={text} answer={answer} />
         )}
 
-        {/* {kind === questionType.TextAnswer && isSummaryMode && (
-          <TextAnswerSummary number={number} text={text} />
+        {kind === questionType.TextAnswer && isSummaryMode && (
+          <TextAnswerSummary
+            number={number}
+            text={text}
+            data={summarizedData}
+          />
         )}
         {kind === questionType.MultipleChoice && isSummaryMode && (
           <MultipleChoiceSummary
             number={number}
             text={text}
-            options={options}
-            answer={answer}
-            responseId={responseId}
+            data={summarizedData}
           />
-        )} */}
+        )}
         {kind === questionType.Checkboxes && isSummaryMode && (
           <CheckboxesSummary
             number={number}
@@ -96,20 +96,15 @@ export default function Response({
             data={summarizedData}
           />
         )}
-        {/* {kind === questionType.Dropdown && isSummaryMode && (
-          <DropdownSummary
-            number={number}
-            text={text}
-            options={options}
-            answer={answer}
-          />
+        {kind === questionType.Dropdown && isSummaryMode && (
+          <DropdownSummary number={number} text={text} data={summarizedData} />
         )}
         {kind === questionType.Date && isSummaryMode && (
-          <DateSummary number={number} text={text} answer={answer} />
+          <DateSummary number={number} text={text} data={summarizedData} />
         )}
         {kind === questionType.Time && isSummaryMode && (
-          <TimeSummary number={number} text={text} answer={answer} />
-        )} */}
+          <TimeSummary number={number} text={text} data={summarizedData} />
+        )}
       </div>
     </>
   );

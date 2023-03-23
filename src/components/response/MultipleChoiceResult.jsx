@@ -17,11 +17,11 @@ export default function MultipleChoiceQuestionEdit({
           placeholder="Question"
           readOnly
         />
-        <fieldset>
+        <fieldset className="space-y-2">
           {options.map((option, index) => {
             if (option === answer.input) {
               return (
-                <div key={index}>
+                <div key={index} className="flex gap-2">
                   <input
                     type="radio"
                     value={option}
@@ -36,7 +36,7 @@ export default function MultipleChoiceQuestionEdit({
               );
             }
             return (
-              <div key={index}>
+              <div key={index} className="flex gap-2">
                 <input
                   type="radio"
                   value={option}
