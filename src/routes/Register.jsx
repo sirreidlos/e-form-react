@@ -52,9 +52,9 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen py-40 bg-gradient-to-b from-yellow-400 via-red-500 to-pink-500">
+    <div className="min-h-screen bg-gray-200">
     <div className="container mx-auto">
-      <div className="flex w-8/12 bg-white rounded-xl mx-auto shadow-lg overflow-hidden">
+      <div className="flex w-8/12 bg-white absolute rounded-xl mx-auto shadow-lg overflow-hidden">
     <div className="p-16 h-[36rem] flex-col flex gap-y-8 items-center bg-white rounded-2xl w-1/2">
         <img src="/E-Form.png" alt="e form" />
         <h1 className="text-3xl font-bold">Register</h1>
@@ -93,7 +93,7 @@ export default function Register() {
               />
           </div>
           {error ? <p className="text-red-600">{error}</p> : ""}
-          <p>
+          <p className="text-base">
             If you already have an account.{" "}
             <Link
               to="/login"
@@ -111,17 +111,17 @@ export default function Register() {
           </button>
         </form>
       </div>
-      <div className=" bg-gradient-to-r from-orange-400 to-yellow-300 p-16 h-[36rem] text-white text-3xl text-center flex-col flex gap-y-8 items-center justify-center w-1/2">
+      <div className=" bg-gradient-to-bl from-orange-400 to-yellow-300 p-16 h-[36rem] text-white text-2xl text-center flex-col flex gap-y-8 items-center justify-center w-1/2">
         <h1>Welcome</h1>
-        <p>Today is the new era for creation</p>
+        <p>Making your surveying easier</p>
+      
       </div>
-      {/* <img
+      </div>
+      </div>
+      <img
       src="brown.jpg"
-      className="w-screen h-screen"
       alt="bg.png.jpg"
-      ></img> */}
-      </div>
-      </div>
+      ></img>
     </div>
   );
 }
