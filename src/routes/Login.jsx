@@ -44,7 +44,7 @@ export default function Login() {
   };
 
   return (
-    // <div className="h-screen w-screen flex justify-center items-center bg-gray-200">
+     // <div className="h-screen w-screen flex justify-center items-center bg-gray-200">
     //   <div
 		// 	class="p-16 h-[37rem] flex-col flex gap-y-8 items-center absolute bg-gradient-to-r w-[32rem]  from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-12 sm:rounded-3xl left-96">
 		// </div> 

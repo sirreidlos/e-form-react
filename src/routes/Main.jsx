@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Thumbnail from "../components/Thumbnail";
 import ApiClient from "../tools/ApiClient";
+import LocalStorage from "../tools/LocalStorage";
 
 export default function Main() {
   const [showLogout, setShowLogout] = useState(false);
@@ -37,7 +38,7 @@ export default function Main() {
           text: "Question",
           kind: "TextAnswer",
           options: null,
-        }, 
+        },
       ],
     }).then((res) => {
       if (res.status === 201) {
@@ -101,43 +102,63 @@ export default function Main() {
       <header className="fixed  bg-white py-2 px-4 flex w-screen justify-between drop-shadow-md hover:drop-shadow-xl">
         {display === displayMode.FORM && (
           <Link to="/">
-            <img class="relative h-17 w-21 top-2 " src="/E-Form.png" alt="e form" />
+            <img
+              class="relative h-17 w-21 top-2 "
+              src="/E-Form.png"
+              alt="e form"
+            />
           </Link>
         )}
         {display === displayMode.TEMPLATE && (
           <button onClick={() => setDisplay(displayMode.FORM)}>{"Back"}</button>
         )}
-        <div className="flex gap-24 justify-between items-center">
-        </div>
+        <div className="flex gap-24 justify-between items-center"></div>
 
         <form className="max-w-sm px-4 ">
-            <div className="relative">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={3}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                </svg>
-                <input
-                    type="text"
-                    placeholder="Search"
-                    className=" w-4/3  py-3 pl-12 pr-4 text-gray-500 border rounded-lg outline-none bg-gray-50 focus:bg-white focus:border-indigo-500" 
-                />
-            </div>
+          <div className="relative">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="absolute top-0 bottom-0 w-6 h-6 my-auto text-gray-400 left-3"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={3}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search"
+              className=" w-4/3  py-3 pl-12 pr-4 text-gray-500 border rounded-lg outline-none bg-gray-50 focus:bg-white focus:border-indigo-500"
+            />
+          </div>
         </form>
 
-        {showLogout ? <div>todo!("LOGOUT")</div> : ""}
+        {showLogout ? (
+          <div className="flex justify-center fixed">
+            <div className="right-4 top-[4.5rem] fixed">
+              <button
+                type="button"
+                className="px-4 py-2 bg-red-500 text-white rounded-lg drop-shadow-lg"
+                onClick={() => {
+                  LocalStorage.delToken();
+                  navigate("/");
+                }}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
         <div
-          className="cursor-pointer pointer-events-none"
-          onClick={() => setShowLogout((showLogout) => !showLogout)}ju
+          className="cursor-pointer"
+          onClick={() => setShowLogout((showLogout) => !showLogout)}
           tabIndex="0"
           role="button"
         >
@@ -164,7 +185,9 @@ export default function Main() {
       {display === displayMode.FORM && (
         <div className="bg-gray-100 px-48 pt-20 pb-6 space-y-2">
           <div className="flex justify-between">
-            <div className="text-gray-800 font-sans font-medium text-2xl">Start a new form</div>
+            <div className="text-gray-800 font-sans font-medium text-2xl">
+              Start a new form
+            </div>
             <button
               className="text-gray-800 font-medium text-2xl"
               type="button"
@@ -183,8 +206,8 @@ export default function Main() {
                 className="rounded-xl w-64 h-36 border border-gray-300"
                 alt="new-form.png"
               />
-              <div> 
-                <p className="font-medium ">Create new</p>      
+              <div>
+                <p className="font-medium ">Create new</p>
               </div>
             </div>
 

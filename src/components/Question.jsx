@@ -5,6 +5,7 @@ import DropdownQuestion from "./DropdownQuestion";
 import TimeQuestion from "./TimeQuestion";
 import DateQuestion from "./DateQuestion";
 import { useEffect } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function Question({
   number,
@@ -91,7 +92,7 @@ export default function Question({
           />
         )}
         {!isSubmitMode && (
-          <>
+          <div className="flex justify-between">
             <select
               value={kind}
               className="p-2 rounded-md"
@@ -109,6 +110,7 @@ export default function Question({
               <option value={questionType.Time}>Time</option>
             </select>
             <button
+              className="hover:bg-gray-200 rounded-full h-8 w-8 text-gray-500"
               type="button"
               onClick={() => {
                 handleQuestionChange(
@@ -120,9 +122,9 @@ export default function Question({
                 );
               }}
             >
-              x delete
+              <DeleteIcon />
             </button>
-          </>
+          </div>
         )}
       </div>
     </>

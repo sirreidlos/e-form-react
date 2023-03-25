@@ -21,10 +21,10 @@ export default function MultipleChoiceQuestionEdit({
           placeholder="Question"
           disabled={isSubmitMode}
         />
-        <fieldset>
+        <fieldset className="space-y-2">
           {options.map((option, index) => {
             return (
-              <div key={index}>
+              <div key={index} className="flex gap-2">
                 <input
                   type="radio"
                   value={option}
@@ -54,6 +54,7 @@ export default function MultipleChoiceQuestionEdit({
                 </label>
                 {!isSubmitMode && (
                   <button
+                    className="hover:bg-gray-200 rounded-full h-6 w-6"
                     type="button"
                     onClick={() => {
                       let newOptions = options;
@@ -66,7 +67,7 @@ export default function MultipleChoiceQuestionEdit({
                       );
                     }}
                   >
-                    delete option
+                    🞫
                   </button>
                 )}
               </div>
@@ -83,7 +84,9 @@ export default function MultipleChoiceQuestionEdit({
               ]);
             }}
           >
-            <button type="button">+ add another option</button>
+            <button type="button" className="text-gray-400">
+              + Add option
+            </button>
           </div>
         )}
       </div>
