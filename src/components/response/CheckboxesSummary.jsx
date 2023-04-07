@@ -33,33 +33,3 @@ export default function CheckboxesResponse({ number, text, data }) {
     </>
   );
 }
-
-const data = {
-  labels: ["Red", "Green", "Blue"],
-  datasets: [
-    {
-      data: [300, 50, 100],
-      backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-      hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-    },
-  ],
-};
-
-const options = {
-  responsive: true,
-  maintainAspectRatio: false,
-  legend: {
-    position: "bottom",
-  },
-};
-const PieChart = () => {
-  return (
-    <div className="w-full max-w-lg mx-auto">
-      <Pie data={data} options={options} />
-    </div>
-  );
-};
-
-<div className="w-full max-w-lg mx-auto">
-  <Pie data={data} options={options} className="rounded-lg shadow-md" />
-</div>;

@@ -11,11 +11,6 @@ import Login from "./routes/Login";
 import Register from "./routes/Register";
 import Response from "./routes/Response";
 
-import ApiClient from "./tools/ApiClient";
-// import dotenv from "dotenv";
-
-// dotenv.config();
-
 const router = createBrowserRouter([
   {
     path: "/",

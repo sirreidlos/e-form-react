@@ -1,8 +1,6 @@
 import TextareaAutosize from "@mui/base/TextareaAutosize";
 
 export default function TextAnswerQuestionEdit({ number, text, answer }) {
-  // const [question, setQuestion] = useState("Question");
-
   return (
     <>
       <div className="space-y-2">

@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import ApiClient from "../tools/ApiClient";
 import html2canvas from "html2canvas";
 import LocalStorage from "../tools/LocalStorage";
-import Uploader from "../components/Uploader/Uploader";
 
 export default function Form() {
   const navigate = useNavigate();
@@ -388,9 +387,6 @@ export default function Form() {
       <div id="content" className="bg-gray-200 py-24">
         <div className="flex justify-center">
           <form className="max-w-3xl space-y-4" onSubmit={handleSubmit}>
-            {/* <div className="bg-white rounded-xl border border-gray-300">
-              <div className="p-8 space-y-2"><Uploader /></div>
-            </div> */}
             <Title
               title={formProperty.title}
               description={formProperty.description}

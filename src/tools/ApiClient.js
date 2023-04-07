@@ -2,7 +2,7 @@ import axios from "axios";
 import LocalStorage from "./LocalStorage";
 
 let instance = axios.create({
-  baseURL: `http://127.255.255.1`,
+  baseURL: process.env.REACT_APP_API_BASE,
 });
 
 instance.interceptors.request.use((config) => {

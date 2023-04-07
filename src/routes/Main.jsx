@@ -48,7 +48,6 @@ export default function Main() {
   }
 
   function createFormWithTemplate(templatesIndex) {
-    // var { title, description, questions } = templates[templatesIndex];
     const templateId = templates[templatesIndex]._id;
     ApiClient.get(`/template/${templateId}`).then((res) => {
       if (res.status !== 200) {

@@ -7,8 +7,6 @@ export default function TimeQuestionEdit({
   handleAnswerChange,
   isSubmitMode,
 }) {
-  // const [question, setQuestion] = useState("Question");
-
   return (
     <>
       <div className="space-y-2">
